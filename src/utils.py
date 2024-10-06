@@ -11,8 +11,11 @@ API_KEY_CURRENCY = os.getenv("API_KEY_CURRENCY")
 API_KEY_STOCK = os.getenv("API_KEY_STOCK")
 
 
-def text_of_the_greeting(current_time):
+def text_of_the_greeting(date_time_str):
     """Функция, которая смотрит на текущее время и возвращает приветствие"""
+
+    current_time = datetime.strptime(date_time_str, "%Y-%m-%d %H:%M:%S")
+
     if 5 <= current_time.hour < 11:
         greeting = "Доброе утро"
     elif 11 <= current_time.hour < 17:
@@ -105,7 +108,7 @@ def top_transactions(transactions):
 
 def data_from_user_settings(file_path):
     """Экспорт данных из user_settings.json"""
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         user_settings = json.load(file)
 
     user_currencies = user_settings["user_currencies"]
@@ -130,7 +133,8 @@ def info_currency_rates(api_key, base_currency, target_currencies):
 
     return currency_rates
 
-def info_stock_prices():
+
+def info_stock_prices(api_key, stocks):
     """Функция, которая собирает данные по акциям, исходя из пользовательских настроек"""
     stock_prices = []
 
@@ -144,5 +148,3 @@ def info_stock_prices():
             stock_prices.append({"stock": stock, "price": float(data["c"])})
 
     return stock_prices
-
-

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 
-def report_decorator(file_name):
+def report_decorator(file_name=None):
     """Декоратор для записи результата функции"""
 
     def decorator(func):
