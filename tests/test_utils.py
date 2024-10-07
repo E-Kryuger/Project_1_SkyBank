@@ -1,12 +1,17 @@
 import json
-from datetime import datetime
 from unittest.mock import mock_open, patch
 
 import pandas as pd
 import pytest
-import requests
 
-from src.utils import (text_of_the_greeting, data_from_excel, filter_transactions_by_date, calculate_card_info, top_transactions, data_from_user_settings, info_currency_rates, info_stock_prices)
+from src.utils import (
+    calculate_card_info,
+    data_from_excel,
+    data_from_user_settings,
+    filter_transactions_by_date,
+    text_of_the_greeting,
+    top_transactions,
+)
 
 
 @pytest.mark.parametrize(
@@ -15,7 +20,7 @@ from src.utils import (text_of_the_greeting, data_from_excel, filter_transaction
         ("2023-07-27 09:00:00", "Доброе утро"),
         ("2023-07-27 13:00:00", "Добрый день"),
         ("2023-07-27 19:00:00", "Добрый вечер"),
-        ("2023-07-27 23:00:00", "Доброй ночи")
+        ("2023-07-27 23:00:00", "Доброй ночи"),
     ],
 )
 def test_text_of_the_greeting(date_time_str, expected):
@@ -58,7 +63,6 @@ def test_filter_transactions_by_date_valid_date(data_transactions_date_time):
     expected_df["Дата операции"] = pd.to_datetime(expected_df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
 
     assert filtered_df.reset_index(drop=True).equals(expected_df.reset_index(drop=True))
-
 
 
 def test_filter_transactions_by_date_no_transactions_in_date_range(data_transactions_date_time):
@@ -118,7 +122,6 @@ def test_calculate_card_info_valid_data():
     ]
 
     assert result == expected_result
-
 
 
 def test_calculate_card_info_empty_dataframe():

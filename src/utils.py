@@ -1,7 +1,8 @@
-from datetime import datetime
-import pandas as pd
 import json
 import os
+from datetime import datetime
+
+import pandas as pd
 import requests
 from dotenv import load_dotenv
 
@@ -49,7 +50,7 @@ def filter_transactions_by_date(transactions, date_time_str):
     # Фильтрация транзакций по датам
     filtered_transactions = transactions_copy.loc[
         (transactions_copy["Дата операции"] >= start_date) & (transactions_copy["Дата операции"] <= end_date)
-        ]
+    ]
 
     return filtered_transactions
 

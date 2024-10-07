@@ -1,8 +1,18 @@
 from src.reports import spending_by_category
 from src.services import dataframe_to_dict_with_str, search_transactions
-from src.utils import (API_KEY_CURRENCY, API_KEY_STOCK, data_from_excel, filter_transactions_by_date, data_from_user_settings, text_of_the_greeting, calculate_card_info, top_transactions, info_currency_rates, info_stock_prices)
+from src.utils import (
+    API_KEY_CURRENCY,
+    API_KEY_STOCK,
+    calculate_card_info,
+    data_from_excel,
+    data_from_user_settings,
+    filter_transactions_by_date,
+    info_currency_rates,
+    info_stock_prices,
+    text_of_the_greeting,
+    top_transactions,
+)
 from src.views import form_json_response
-
 
 if API_KEY_CURRENCY is None:
     raise ValueError("API_KEY_CURRENCY не найден в окружении")
@@ -14,8 +24,8 @@ if __name__ == "__main__":
     print("===== Веб страницы: «Главная» =====", "\n")
     # Заданные значения для выполнения функций
     date_time_str = "2020-04-27 19:30:30"
-    file_path_transactions = "data/operations.xlsx"
-    file_path_user_settings = "data/user_settings.json"
+    file_path_transactions = "../data/operations.xlsx"
+    file_path_user_settings = "../data/user_settings.json"
     base_currency = "RUB"
 
     # Загрузка данных транзакций

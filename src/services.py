@@ -1,5 +1,5 @@
 import json
-import pandas as pd
+
 
 
 def dataframe_to_dict_with_str(df):
@@ -22,10 +22,10 @@ def search_transactions(transactions, query):
         transaction
         for transaction in transactions
         if isinstance(transaction, dict)
-           and (
-                   query.lower() in transaction.get("Описание", "").lower()
-                   or query.lower() in transaction.get("Категория", "").lower()
-           )
+        and (
+            query.lower() in transaction.get("Описание", "").lower()
+            or query.lower() in transaction.get("Категория", "").lower()
+        )
     ]
 
     json_response = json.dumps(matching_transactions, ensure_ascii=False)

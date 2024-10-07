@@ -1,12 +1,7 @@
 import json
 
 
-def form_json_response(
-        greeting,
-        card_info,
-        top_transactions,
-        currency_rates,
-        stock_prices):
+def form_json_response(greeting, card_info, top_transactions, currency_rates, stock_prices):
     """Формирует JSON-ответ"""
     response = {
         "greeting": greeting,

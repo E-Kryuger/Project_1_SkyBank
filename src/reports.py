@@ -57,7 +57,7 @@ def spending_by_category(transactions, category, date):
     start_date = date - timedelta(days=90)
     filtered_by_date = filtered_by_category[
         (filtered_by_category["Дата операции"] >= start_date) & (filtered_by_category["Дата операции"] <= date)
-        ]
+    ]
 
     # Возвращение DataFrame с транзакциями по категории за последние три месяца
     return filtered_by_date
