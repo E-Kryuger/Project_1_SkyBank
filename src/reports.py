@@ -1,7 +1,11 @@
 import functools
+import logging
 from datetime import datetime, timedelta
 
 import pandas as pd
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 def report_decorator(file_name=None):
@@ -41,11 +45,15 @@ def spending_by_category(transactions, category, date):
                 try:
                     date = datetime.strptime(date, "%Y-%m-%d")
                 except ValueError:
+                    logging.error("date должен быть в формате 'YYYY-MM-DD' или 'YYYY-MM-DD HH:MM:SS'")
                     raise ValueError("date должен быть в формате 'YYYY-MM-DD' или 'YYYY-MM-DD HH:MM:SS'")
         elif not isinstance(date, datetime):
+            logging.error("date должен быть объектом datetime")
             raise ValueError("date должен быть объектом datetime")
     else:
         date = datetime.today()
+
+    logging.info("Используемая дата: %s", date)
 
     # Приведение "Дата операции" к datetime
     transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="mixed", dayfirst=True)
@@ -53,11 +61,15 @@ def spending_by_category(transactions, category, date):
     # Фильтрация транзакций по категории
     filtered_by_category = transactions[transactions["Категория"] == category]
 
+    logging.info("Количество транзакций в категории '%s': %d", category, len(filtered_by_category))
+
     # Фильтрация транзакций по дате
     start_date = date - timedelta(days=90)
     filtered_by_date = filtered_by_category[
         (filtered_by_category["Дата операции"] >= start_date) & (filtered_by_category["Дата операции"] <= date)
     ]
+
+    logging.info("Количество транзакций в категории '%s' за последние три месяца: %d", category, len(filtered_by_date))
 
     # Возвращение DataFrame с транзакциями по категории за последние три месяца
     return filtered_by_date

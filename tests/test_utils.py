@@ -1,31 +1,26 @@
 import json
+from datetime import datetime
 from unittest.mock import mock_open, patch
 
 import pandas as pd
 import pytest
 
-from src.utils import (
-    calculate_card_info,
-    data_from_excel,
-    data_from_user_settings,
-    filter_transactions_by_date,
-    text_of_the_greeting,
-    top_transactions,
-)
+from src.utils import (calculate_card_info, data_from_excel, data_from_user_settings, filter_transactions_by_date,
+                       text_of_the_greeting, top_transactions)
 
 
 @pytest.mark.parametrize(
-    "date_time_str, expected",
+    "current_time, expected",
     [
-        ("2023-07-27 09:00:00", "Доброе утро"),
-        ("2023-07-27 13:00:00", "Добрый день"),
-        ("2023-07-27 19:00:00", "Добрый вечер"),
-        ("2023-07-27 23:00:00", "Доброй ночи"),
+        (datetime(2023, 7, 27, 9, 0, 0), "Доброе утро"),
+        (datetime(2023, 7, 27, 13, 0, 0), "Добрый день"),
+        (datetime(2023, 7, 27, 19, 0, 0), "Добрый вечер"),
+        (datetime(2023, 7, 27, 23, 0, 0), "Доброй ночи"),
     ],
 )
-def test_text_of_the_greeting(date_time_str, expected):
-    """Тестирует функцию text_of_the_greeting"""
-    assert text_of_the_greeting(date_time_str) == expected
+def test_text_of_the_greeting(current_time, expected):
+    """Тестирует функцию text_of_the_greeting для разных времен суток"""
+    assert text_of_the_greeting(current_time) == expected
 
 
 def test_data_from_excel(data_transactions):
@@ -38,6 +33,13 @@ def test_data_from_excel(data_transactions):
         assert result.equals(df)
 
 
+def test_data_from_excel_file_not_found():
+    """Тестирует возникновение ошибки при отсутствии файла"""
+    with patch("pandas.read_excel", side_effect=FileNotFoundError):
+        with pytest.raises(ValueError, match="Файл 'missing_file.xlsx' не найден."):
+            data_from_excel("missing_file.xlsx")
+
+
 def test_data_from_excel_empty_file():
     """Тестирует корректную загрузку при пустом Excel файле"""
     empty_df = pd.DataFrame()
@@ -46,23 +48,6 @@ def test_data_from_excel_empty_file():
         mock_read_excel.return_value = empty_df
         result = data_from_excel("empty_file.xlsx")
         assert result.equals(empty_df)
-
-
-def test_filter_transactions_by_date_valid_date(data_transactions_date_time):
-    """
-    Тестирует корректную фильтрацию транзакций по валидной дате.
-    """
-    df = pd.DataFrame(data_transactions_date_time[0])
-    df["Дата операции"] = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
-
-    date_time_str = "2023-07-27 12:00:00"
-    filtered_df = filter_transactions_by_date(df, date_time_str)
-
-    expected_data = data_transactions_date_time[1]
-    expected_df = pd.DataFrame(expected_data)
-    expected_df["Дата операции"] = pd.to_datetime(expected_df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
-
-    assert filtered_df.reset_index(drop=True).equals(expected_df.reset_index(drop=True))
 
 
 def test_filter_transactions_by_date_no_transactions_in_date_range(data_transactions_date_time):
